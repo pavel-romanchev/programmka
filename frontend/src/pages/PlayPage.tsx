@@ -1,0 +1,120 @@
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getPlayById, getImageUrl } from '../api/plays'
+import { Play } from '../types'
+
+function PlayPage() {
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const [play, setPlay] = useState<Play | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchPlay = async () => {
+      if (!id) return
+      try {
+        const data = await getPlayById(Number(id))
+        setPlay(data)
+      } catch {
+        setError('Не удалось загрузить спектакль')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPlay()
+  }, [id])
+
+  const formatDuration = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60)
+    const mins = minutes % 60
+    if (hours > 0 && mins > 0) {
+      return `${hours}ч ${mins}мин`
+    } else if (hours > 0) {
+      return `${hours}ч`
+    }
+    return `${mins} мин`
+  }
+
+  if (loading) {
+    return (
+      <div className="page">
+        <div className="loading">Загрузка...</div>
+      </div>
+    )
+  }
+
+  if (error || !play) {
+    return (
+      <div className="page">
+        <div className="error">{error || 'Спектакль не найден'}</div>
+        <button className="btn btn-primary" onClick={() => navigate('/')}>
+          На главную
+        </button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="page">
+      <header className="page-header">
+        <button className="btn btn-back" onClick={() => navigate(-1)}>
+          ← Назад
+        </button>
+      </header>
+
+      <div className="play-detail">
+        <div className="play-detail-image">
+          <img
+            src={getImageUrl(play.image_path)}
+            alt={play.title}
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = '/placeholder.png'
+            }}
+          />
+        </div>
+
+        <h1 className="play-detail-title">{play.title}</h1>
+
+        <div className="play-detail-meta">
+          <div className="meta-item">
+            <span className="meta-label">Режиссёр:</span>
+            <span className="meta-value">{play.director}</span>
+          </div>
+          <div className="meta-item">
+            <span className="meta-label">Театр:</span>
+            <span className="meta-value">{play.theater}</span>
+          </div>
+          <div className="meta-item">
+            <span className="meta-label">Длительность:</span>
+            <span className="meta-value">{formatDuration(play.duration)}</span>
+          </div>
+          <div className="meta-item">
+            <span className="meta-label">Рейтинг:</span>
+            <span className="meta-value rating">
+              {play.average_rating.toFixed(1)}
+            </span>
+          </div>
+        </div>
+
+        <div className="play-detail-annotation">
+          <h2>Аннотация</h2>
+          <p>{play.annotation}</p>
+        </div>
+
+        <div className="play-detail-actors">
+          <h2>Актёры</h2>
+          <div className="actors-list">
+            {play.actors.map((actor, index) => (
+              <span key={index} className="actor-tag">
+                {actor}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default PlayPage
