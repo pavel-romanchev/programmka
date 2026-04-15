@@ -1,23 +1,26 @@
 import { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 function Notification() {
   const location = useLocation()
-  const navigate = useNavigate()
   const [message, setMessage] = useState<string | null>(null)
 
   useEffect(() => {
     if (location.state?.message) {
       setMessage(location.state.message)
-      navigate(location.pathname, { replace: true, state: {} })
-
-      const timer = setTimeout(() => {
-        setMessage(null)
-      }, 3000)
-
-      return () => clearTimeout(timer)
+      window.history.replaceState({}, '', location.pathname)
     }
-  }, [location.state, navigate, location.pathname])
+  }, [location.state, location.pathname])
+
+  useEffect(() => {
+    if (!message) return
+
+    const timer = setTimeout(() => {
+      setMessage(null)
+    }, 3000)
+
+    return () => clearTimeout(timer)
+  }, [message])
 
   if (!message) return null
 

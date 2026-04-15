@@ -114,13 +114,13 @@ body {
 }
 
 .logo {
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .logo-text {
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 300;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.1em;
   color: var(--color-text);
 }
 
@@ -251,6 +251,56 @@ body {
 .play-detail {
   max-width: 700px;
   margin: 0 auto;
+}
+
+.play-detail-image-container {
+  position: relative;
+}
+
+.play-detail-actions {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.btn-action {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-action:hover {
+  background-color: #fff;
+  transform: scale(1.05);
+}
+
+.btn-edit {
+  color: var(--color-text);
+}
+
+.btn-edit:hover {
+  color: var(--color-accent);
+}
+
+.btn-delete {
+  color: var(--color-text);
+}
+
+.btn-delete:hover {
+  color: #c45c5c;
 }
 
 .play-detail-image {
@@ -414,6 +464,12 @@ body {
   object-fit: cover;
 }
 
+.form-hint {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
 .notification {
   position: fixed;
   top: 1.5rem;
@@ -499,4 +555,60 @@ body {
   .btn {
     padding: 0.75rem 1rem;
   }
+}
+
+.footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  opacity: 0.5;
+}
+
+.annotation-text p {
+  margin-bottom: 1rem;
+}
+
+.annotation-text p:last-child {
+  margin-bottom: 0;
+}
+
+.star-rating-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.star-rating {
+  display: flex;
+  gap: 0.125rem;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+}
+
+.star {
+  font-size: 1.5rem;
+}
+
+.star-filled {
+  color: var(--color-rating);
+}
+
+.star-half {
+  background: linear-gradient(90deg, var(--color-rating) 50%, #ddd 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.star-empty {
+  color: #ddd;
+}
+
+.star-rating-value {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  min-width: 3rem;
 }

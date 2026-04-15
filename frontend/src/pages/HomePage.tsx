@@ -40,7 +40,7 @@ function HomePage() {
     <div className="home-page">
       <div className="home-content">
         <div className="logo">
-          <span className="logo-text">Театр</span>
+          <span className="logo-text">Программка</span>
         </div>
 
         <form onSubmit={handleSearch} className="search-form">

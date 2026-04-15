@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getPlayById, getImageUrl } from '../api/plays'
+import { getPlayById, getImageUrl, deletePlay } from '../api/plays'
 import { Play } from '../types'
 
 function PlayPage() {
@@ -36,6 +36,25 @@ function PlayPage() {
     return `${mins} мин`
   }
 
+  const handleEdit = () => {
+    navigate(`/plays/${id}/edit`)
+  }
+
+  const handleDelete = async () => {
+    if (!id || !play) return
+    
+    const confirmed = window.confirm('Вы уверены, что хотите удалить этот спектакль?')
+    if (!confirmed) return
+
+    try {
+      await deletePlay(Number(id))
+      navigate('/', { state: { message: 'Спектакль удалён' } })
+    } catch (error) {
+      console.error('Failed to delete play:', error)
+      alert('Не удалось удалить спектакль')
+    }
+  }
+
   if (loading) {
     return (
       <div className="page">
@@ -64,14 +83,24 @@ function PlayPage() {
       </header>
 
       <div className="play-detail">
-        <div className="play-detail-image">
-          <img
-            src={getImageUrl(play.image_path)}
-            alt={play.title}
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/placeholder.png'
-            }}
-          />
+        <div className="play-detail-image-container">
+          <div className="play-detail-actions">
+            <button className="btn btn-action btn-edit" onClick={handleEdit} title="Редактировать">
+              ✎
+            </button>
+            <button className="btn btn-action btn-delete" onClick={handleDelete} title="Удалить">
+              ✕
+            </button>
+          </div>
+          <div className="play-detail-image">
+            <img
+              src={getImageUrl(play.image_path)}
+              alt={play.title}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/placeholder.png'
+              }}
+            />
+          </div>
         </div>
 
         <h1 className="play-detail-title">{play.title}</h1>
@@ -99,7 +128,11 @@ function PlayPage() {
 
         <div className="play-detail-annotation">
           <h2>Аннотация</h2>
-          <p>{play.annotation}</p>
+          <div className="annotation-text">
+            {play.annotation.split('\n\n').map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
+          </div>
         </div>
 
         <div className="play-detail-actors">

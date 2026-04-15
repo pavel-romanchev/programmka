@@ -1,10 +1,11 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { createPlay } from '../api/plays'
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getPlayById, updatePlay, getImageUrl } from '../api/plays'
 import { PlayFormData } from '../types'
 import StarRating from '../components/StarRating'
 
-function AddPlayPage() {
+function EditPlayPage() {
+  const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [formData, setFormData] = useState<PlayFormData>({
     title: '',
@@ -17,8 +18,40 @@ function AddPlayPage() {
     image: null,
   })
   const [durationInput, setDurationInput] = useState('')
+  const [currentImagePath, setCurrentImagePath] = useState<string | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [pageLoading, setPageLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchPlay = async () => {
+      if (!id) return
+      try {
+        const play = await getPlayById(Number(id))
+        setFormData({
+          title: play.title,
+          director: play.director,
+          theater: play.theater,
+          duration: play.duration,
+          annotation: play.annotation,
+          average_rating: play.average_rating,
+          actors: play.actors.join(', '),
+          image: null,
+        })
+        setDurationInput(play.duration.toString())
+        setCurrentImagePath(play.image_path)
+        if (play.image_path) {
+          setImagePreview(getImageUrl(play.image_path))
+        }
+      } catch (error) {
+        console.error('Failed to fetch play:', error)
+        navigate('/')
+      } finally {
+        setPageLoading(false)
+      }
+    }
+    fetchPlay()
+  }, [id, navigate])
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -61,21 +94,30 @@ function AddPlayPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!id) return
     setLoading(true)
 
     try {
-      await createPlay(formData)
-      navigate('/', { state: { message: 'Заявка отправлена!' } })
+      await updatePlay(Number(id), formData)
+      navigate(`/plays/${id}`, { state: { message: 'Спектакль обновлён!' } })
     } catch (error) {
-      console.error('Failed to create play:', error)
-      alert('Не удалось создать спектакль')
+      console.error('Failed to update play:', error)
+      alert('Не удалось обновить спектакль')
     } finally {
       setLoading(false)
     }
   }
 
   const handleBack = () => {
-    navigate('/')
+    navigate(-1)
+  }
+
+  if (pageLoading) {
+    return (
+      <div className="page">
+        <div className="loading">Загрузка...</div>
+      </div>
+    )
   }
 
   return (
@@ -84,7 +126,7 @@ function AddPlayPage() {
         <button className="btn btn-back" onClick={handleBack}>
           ← Назад
         </button>
-        <h1 className="page-title">Добавить спектакль</h1>
+        <h1 className="page-title">Редактировать спектакль</h1>
       </header>
 
       <form className="add-play-form" onSubmit={handleSubmit}>
@@ -108,6 +150,9 @@ function AddPlayPage() {
               )}
             </label>
           </div>
+          {currentImagePath && !formData.image && (
+            <p className="form-hint">Текущее изображение будет заменено при загрузке нового</p>
+          )}
         </div>
 
         <div className="form-group">
@@ -198,11 +243,11 @@ function AddPlayPage() {
           className="btn btn-primary btn-full"
           disabled={loading}
         >
-          {loading ? 'Отправка...' : 'Отправить на модерацию'}
+          {loading ? 'Сохранение...' : 'Сохранить изменения'}
         </button>
       </form>
     </div>
   )
 }
 
-export default AddPlayPage
+export default EditPlayPage

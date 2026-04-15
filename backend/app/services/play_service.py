@@ -44,3 +44,31 @@ class PlayService:
 
     def update_play_image(self, play_id: int, image_path: str) -> Optional[Play]:
         return self.repository.update_image_path(play_id, image_path)
+
+    def update_play(
+        self,
+        play_id: int,
+        title: str,
+        director: str,
+        theater: str,
+        duration: int,
+        annotation: str,
+        average_rating: float,
+        actors: list[str],
+        image_path: Optional[str] = None,
+    ) -> Optional[Play]:
+        play = Play(
+            id=play_id,
+            title=title,
+            director=director,
+            theater=theater,
+            duration=duration,
+            annotation=annotation,
+            average_rating=average_rating,
+            actors=actors,
+            image_path=image_path,
+        )
+        return self.repository.update(play_id, play)
+
+    def delete_play(self, play_id: int) -> bool:
+        return self.repository.delete(play_id)

@@ -45,3 +45,31 @@ export function getImageUrl(path: string | null): string {
   if (!path) return '/placeholder.png';
   return `${API_BASE}${path}`;
 }
+
+export async function updatePlay(id: number, data: PlayFormData): Promise<Play> {
+  const formData = new FormData();
+  formData.append('title', data.title);
+  formData.append('director', data.director);
+  formData.append('theater', data.theater);
+  formData.append('duration', data.duration.toString());
+  formData.append('annotation', data.annotation);
+  formData.append('average_rating', data.average_rating.toString());
+  formData.append('actors', data.actors);
+  if (data.image) {
+    formData.append('image', data.image);
+  }
+
+  const response = await fetch(`${API_BASE}/api/plays/${id}`, {
+    method: 'PUT',
+    body: formData,
+  });
+  if (!response.ok) throw new Error('Failed to update play');
+  return response.json();
+}
+
+export async function deletePlay(id: number): Promise<void> {
+  const response = await fetch(`${API_BASE}/api/plays/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) throw new Error('Failed to delete play');
+}
