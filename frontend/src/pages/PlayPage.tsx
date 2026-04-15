@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { getPlayById, getImageUrl, deletePlay } from '../api/plays'
 import { Play } from '../types'
 
 function PlayPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const location = useLocation()
   const [play, setPlay] = useState<Play | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -55,6 +56,14 @@ function PlayPage() {
     }
   }
 
+  const handleBack = () => {
+    if (location.state?.fromEdit) {
+      navigate(-2)
+    } else {
+      navigate(-1)
+    }
+  }
+
   if (loading) {
     return (
       <div className="page">
@@ -77,7 +86,7 @@ function PlayPage() {
   return (
     <div className="page">
       <header className="page-header">
-        <button className="btn btn-back" onClick={() => navigate(-1)}>
+        <button className="btn btn-back" onClick={handleBack}>
           ← Назад
         </button>
       </header>
@@ -129,7 +138,7 @@ function PlayPage() {
         <div className="play-detail-annotation">
           <h2>Аннотация</h2>
           <div className="annotation-text">
-            {play.annotation.split('\n\n').map((para, i) => (
+            {play.annotation.split(/\r?\n+/).map((para, i) => (
               <p key={i}>{para}</p>
             ))}
           </div>

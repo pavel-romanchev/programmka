@@ -1,27 +1,41 @@
-import { useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import { searchPlays } from '../api/plays'
 import PlayCard from '../components/PlayCard'
 import { Play } from '../types'
 
 function HomePage() {
   const navigate = useNavigate()
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('q') || '')
   const [searchResults, setSearchResults] = useState<Play[] | null>(null)
   const [isSearching, setIsSearching] = useState(false)
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!searchQuery.trim()) return
+  useEffect(() => {
+    const query = searchParams.get('q')
+    if (query) {
+      setSearchQuery(query)
+      performSearch(query)
+    }
+  }, [])
 
+  const performSearch = async (query: string) => {
     setIsSearching(true)
     try {
-      const results = await searchPlays(searchQuery.trim())
+      const results = await searchPlays(query)
       setSearchResults(results)
     } catch (error) {
       console.error('Search failed:', error)
       setSearchResults([])
     }
+  }
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!searchQuery.trim()) return
+
+    setSearchParams({ q: searchQuery.trim() })
+    performSearch(searchQuery.trim())
   }
 
   const handleShowAll = () => {

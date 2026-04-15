@@ -99,7 +99,7 @@ function EditPlayPage() {
 
     try {
       await updatePlay(Number(id), formData)
-      navigate(`/plays/${id}`, { state: { message: 'Спектакль обновлён!' } })
+      navigate(`/plays/${id}`, { replace: true, state: { message: 'Спектакль обновлён!', fromEdit: true } })
     } catch (error) {
       console.error('Failed to update play:', error)
       alert('Не удалось обновить спектакль')
