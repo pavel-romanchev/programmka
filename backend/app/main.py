@@ -6,19 +6,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import DATABASE_PATH, STATIC_DIR, IMAGES_DIR
 from app.database import engine, Base
 from app.api.plays import router as plays_router
+from app.api.articles import router as articles_router
+from app.models.article import ArticleModel
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    if not DATABASE_PATH.exists():
-        DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
-        Base.metadata.create_all(bind=engine)
-        print("Database created successfully")
-    else:
-        print("Database already exists")
-
+    DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    Base.metadata.create_all(bind=engine)
     IMAGES_DIR.mkdir(parents=True, exist_ok=True)
-
     yield
 
 
@@ -40,6 +36,7 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 app.include_router(plays_router)
+app.include_router(articles_router)
 
 
 @app.get("/health")
