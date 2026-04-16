@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createPlay } from '../api/plays'
-import { PlayFormData } from '../types'
+import { PlayFormData, ActorEntry } from '../types'
 import StarRating from '../components/StarRating'
+import ActorsEditor from '../components/ActorsEditor'
 
 function AddPlayPage() {
   const navigate = useNavigate()
@@ -13,7 +14,7 @@ function AddPlayPage() {
     duration: 0,
     annotation: '',
     average_rating: 5.0,
-    actors: '',
+    actors: [],
     image: null,
   })
   const [durationInput, setDurationInput] = useState('')
@@ -44,6 +45,13 @@ function AddPlayPage() {
     setFormData((prev) => ({
       ...prev,
       average_rating: rating,
+    }))
+  }
+
+  const handleActorsChange = (actors: ActorEntry[]) => {
+    setFormData((prev) => ({
+      ...prev,
+      actors,
     }))
   }
 
@@ -181,16 +189,8 @@ function AddPlayPage() {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Актёры (через запятую)</label>
-          <input
-            type="text"
-            name="actors"
-            value={formData.actors}
-            onChange={handleInputChange}
-            className="form-input"
-            placeholder="Иванов И., Петров П., Сидоров С."
-            required
-          />
+          <label className="form-label">Актёры</label>
+          <ActorsEditor value={formData.actors} onChange={handleActorsChange} />
         </div>
 
         <button

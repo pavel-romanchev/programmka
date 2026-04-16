@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Any
 
 
 @dataclass
@@ -11,5 +11,5 @@ class Play:
     duration: int
     annotation: str
     average_rating: float
-    actors: list[str]
+    actors: list[dict[str, str]]
     image_path: Optional[str]

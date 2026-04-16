@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getPlayById, updatePlay, getImageUrl } from '../api/plays'
-import { PlayFormData } from '../types'
+import { PlayFormData, ActorEntry } from '../types'
 import StarRating from '../components/StarRating'
+import ActorsEditor from '../components/ActorsEditor'
 
 function EditPlayPage() {
   const { id } = useParams<{ id: string }>()
@@ -14,7 +15,7 @@ function EditPlayPage() {
     duration: 0,
     annotation: '',
     average_rating: 5.0,
-    actors: '',
+    actors: [],
     image: null,
   })
   const [durationInput, setDurationInput] = useState('')
@@ -35,7 +36,7 @@ function EditPlayPage() {
           duration: play.duration,
           annotation: play.annotation,
           average_rating: play.average_rating,
-          actors: play.actors.join(', '),
+          actors: play.actors,
           image: null,
         })
         setDurationInput(play.duration.toString())
@@ -77,6 +78,13 @@ function EditPlayPage() {
     setFormData((prev) => ({
       ...prev,
       average_rating: rating,
+    }))
+  }
+
+  const handleActorsChange = (actors: ActorEntry[]) => {
+    setFormData((prev) => ({
+      ...prev,
+      actors,
     }))
   }
 
@@ -226,16 +234,8 @@ function EditPlayPage() {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Актёры (через запятую)</label>
-          <input
-            type="text"
-            name="actors"
-            value={formData.actors}
-            onChange={handleInputChange}
-            className="form-input"
-            placeholder="Иванов И., Петров П., Сидоров С."
-            required
-          />
+          <label className="form-label">Актёры</label>
+          <ActorsEditor value={formData.actors} onChange={handleActorsChange} />
         </div>
 
         <button

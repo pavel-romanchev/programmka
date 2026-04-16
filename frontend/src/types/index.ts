@@ -1,3 +1,8 @@
+export interface ActorEntry {
+  role: string;
+  actor: string;
+}
+
 export interface Play {
   id: number;
   title: string;
@@ -6,7 +11,7 @@ export interface Play {
   duration: number;
   annotation: string;
   average_rating: number;
-  actors: string[];
+  actors: ActorEntry[];
   image_path: string | null;
 }
 
@@ -17,6 +22,6 @@ export interface PlayFormData {
   duration: number;
   annotation: string;
   average_rating: number;
-  actors: string;
+  actors: ActorEntry[];
   image: File | null;
 }

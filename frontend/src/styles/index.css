@@ -612,3 +612,122 @@ body {
   color: var(--color-text-secondary);
   min-width: 3rem;
 }
+
+.actors-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.actors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.actor-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.drag-handle {
+  cursor: grab;
+  color: var(--color-text-secondary);
+  padding: 0.25rem;
+  font-size: 1rem;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.actor-input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  background-color: var(--color-bg);
+}
+
+.actor-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.actor-role {
+  max-width: 150px;
+}
+
+.btn-delete-entry {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 1.25rem;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.btn-delete-entry:hover {
+  background-color: #f0e8e8;
+  color: #c45c5c;
+}
+
+.btn-add-actor {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-accent);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  align-self: center;
+}
+
+.btn-add-actor:hover:not(.disabled) {
+  background-color: var(--color-accent-hover);
+  transform: scale(1.05);
+}
+
+.btn-add-actor.disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.actors-by-role {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.role-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.role-name {
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.role-actors {
+  color: var(--color-text-secondary);
+}

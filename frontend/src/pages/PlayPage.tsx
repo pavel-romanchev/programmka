@@ -146,12 +146,29 @@ function PlayPage() {
 
         <div className="play-detail-actors">
           <h2>Актёры</h2>
-          <div className="actors-list">
-            {play.actors.map((actor, index) => (
-              <span key={index} className="actor-tag">
-                {actor}
-              </span>
-            ))}
+          <div className="actors-by-role">
+            {(() => {
+              const NO_ROLE_LABEL = 'Роль не указана'
+              const rolesMap = play.actors.reduce((acc, entry) => {
+                const role = entry.role || NO_ROLE_LABEL
+                if (!acc[role]) acc[role] = []
+                acc[role].push(entry.actor)
+                return acc
+              }, {} as Record<string, string[]>)
+
+              const sortedRoles = Object.entries(rolesMap).sort(([a], [b]) => {
+                if (a === NO_ROLE_LABEL) return 1
+                if (b === NO_ROLE_LABEL) return -1
+                return a.localeCompare(b, 'ru')
+              })
+
+              return sortedRoles.map(([role, actors]) => (
+                <div key={role} className="role-group">
+                  <span className="role-name">{role}:</span>
+                  <span className="role-actors">{actors.join(', ')}</span>
+                </div>
+              ))
+            })()}
           </div>
         </div>
       </div>

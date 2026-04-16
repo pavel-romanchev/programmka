@@ -1,5 +1,6 @@
 import os
 import uuid
+import json
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
@@ -78,7 +79,7 @@ async def create_play(
     if image and image.filename:
         image_path = _save_image(image)
 
-    actors_list = [a.strip() for a in actors.split(",") if a.strip()]
+    actors_list = json.loads(actors) if actors else []
 
     play = service.create_play(
         title=title,
@@ -119,7 +120,7 @@ async def update_play(
             _delete_image(image_path)
         image_path = _save_image(image)
 
-    actors_list = [a.strip() for a in actors.split(",") if a.strip()]
+    actors_list = json.loads(actors) if actors else []
 
     play = service.update_play(
         play_id=play_id,

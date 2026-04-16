@@ -1,9 +1,22 @@
 import json
-from typing import Optional
+from typing import Optional, Any
 from sqlalchemy.orm import Session
 
 from app.models.play import PlayModel
 from app.domain.entities import Play
+
+
+def _normalize_actors(actors_data: Any) -> list[dict[str, str]]:
+    if not actors_data:
+        return []
+    if isinstance(actors_data, list):
+        if len(actors_data) == 0:
+            return []
+        if isinstance(actors_data[0], str):
+            return [{"role": "", "actor": a} for a in actors_data]
+        if isinstance(actors_data[0], dict):
+            return actors_data
+    return []
 
 
 class PlayRepository:
@@ -11,6 +24,7 @@ class PlayRepository:
         self.db = db
 
     def _to_entity(self, model: PlayModel) -> Play:
+        actors_data = json.loads(model.actors) if model.actors else []
         return Play(
             id=model.id,
             title=model.title,
@@ -19,7 +33,7 @@ class PlayRepository:
             duration=model.duration,
             annotation=model.annotation,
             average_rating=model.average_rating,
-            actors=json.loads(model.actors) if model.actors else [],
+            actors=_normalize_actors(actors_data),
             image_path=model.image_path,
         )
 

@@ -28,7 +28,7 @@ export async function createPlay(data: PlayFormData): Promise<Play> {
   formData.append('duration', data.duration.toString());
   formData.append('annotation', data.annotation);
   formData.append('average_rating', data.average_rating.toString());
-  formData.append('actors', data.actors);
+  formData.append('actors', JSON.stringify(data.actors));
   if (data.image) {
     formData.append('image', data.image);
   }
@@ -54,7 +54,7 @@ export async function updatePlay(id: number, data: PlayFormData): Promise<Play> 
   formData.append('duration', data.duration.toString());
   formData.append('annotation', data.annotation);
   formData.append('average_rating', data.average_rating.toString());
-  formData.append('actors', data.actors);
+  formData.append('actors', JSON.stringify(data.actors));
   if (data.image) {
     formData.append('image', data.image);
   }
