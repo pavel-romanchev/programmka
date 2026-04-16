@@ -1,6 +1,6 @@
 import { Play, PlayFormData } from '../types';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = '';
 
 export async function getAllPlays(): Promise<Play[]> {
   const response = await fetch(`${API_BASE}/api/plays`);

@@ -1,6 +1,6 @@
 import { Article, ArticleFormData, PaginatedArticles } from '../types';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = '';
 
 export async function getArticles(page: number = 1): Promise<PaginatedArticles> {
   const response = await fetch(`${API_BASE}/api/articles?page=${page}`);

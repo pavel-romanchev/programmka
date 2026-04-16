@@ -133,7 +133,7 @@ function HomePage() {
 
         <div className="editorial-section">
           <div className="logo editorial-logo">
-            <span className="logo-text">Программка. Редакция</span>
+            <span className="logo-text">Редакция</span>
           </div>
           <div className="editorial-add-button">
             <button
