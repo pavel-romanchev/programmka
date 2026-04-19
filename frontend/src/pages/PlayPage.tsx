@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { getPlayById, getImageUrl, deletePlay } from '../api/plays'
 import { Play } from '../types'
+import CommentSection from '../components/CommentSection'
+import UserIcon from '../components/UserIcon'
 
 function PlayPage() {
   const { id } = useParams<{ id: string }>()
@@ -89,6 +91,7 @@ function PlayPage() {
         <button className="btn btn-back" onClick={handleBack}>
           ← Назад
         </button>
+        <UserIcon />
       </header>
 
       <div className="play-detail">
@@ -172,6 +175,8 @@ function PlayPage() {
           </div>
         </div>
       </div>
+
+      <CommentSection entityType="play" entityId={play.id} />
     </div>
   )
 }

@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { getArticleById, getArticleImageUrl, deleteArticle } from '../api/articles'
 import { getPlayById } from '../api/plays'
 import { Article, Play } from '../types'
+import CommentSection from '../components/CommentSection'
+import UserIcon from '../components/UserIcon'
 
 function ArticlePage() {
   const { id } = useParams<{ id: string }>()
@@ -98,6 +100,7 @@ function ArticlePage() {
         <button className="btn btn-back" onClick={handleBack}>
           ← Назад
         </button>
+        <UserIcon />
       </header>
 
       <div className="article-detail">
@@ -162,6 +165,8 @@ function ArticlePage() {
           </div>
         )}
       </div>
+
+      <CommentSection entityType="article" entityId={article.id} />
     </div>
   )
 }

@@ -4,6 +4,7 @@ import { searchPlays } from '../api/plays'
 import { getArticles } from '../api/articles'
 import PlayCard from '../components/PlayCard'
 import ArticleCard from '../components/ArticleCard'
+import UserIcon from '../components/UserIcon'
 import { Play, ArticleListItem, PaginatedArticles } from '../types'
 
 function HomePage() {
@@ -86,6 +87,7 @@ function HomePage() {
 
   return (
     <div className="home-page">
+      <UserIcon />
       <div className="home-content">
         <div className="logo">
           <span className="logo-text">Программка</span>
